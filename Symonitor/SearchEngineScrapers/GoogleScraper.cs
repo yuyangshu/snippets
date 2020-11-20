@@ -8,22 +8,21 @@ namespace Symonitor.SearchEngineScrapers
     public class GoogleScraper : ISearchEngineScraper
     {
         const string UrlPattern = "https://www.google.com/search?q={0}&num=100";
-        // not all results are web pages, this only matches the most common format; can be refined further
         const string PagePattern = @"(?<=div class=""yuRUbf""><a href="")[^ ]+(?="" onmousedown)";
-        static readonly HttpClient HttpClient;
+        static readonly HttpClient _httpClient;
 
         static GoogleScraper()
         {
-            HttpClient = new HttpClient();
-            HttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0");
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0");
         }
 
-        public async Task<int> SearchKeywordsAndCountUrlOccurrences(string keywords, string urlToCount)
+        public async Task<int> SearchKeywordsAndCountUrlAppearances(string keywords, string urlToCount)
         {
             // spaces in urls seems to work for google
             var targetUrl = String.Format(UrlPattern, keywords);
 
-            using (var result = await HttpClient.GetAsync(targetUrl))
+            using (var result = await _httpClient.GetAsync(targetUrl))
             {
                 if (result.IsSuccessStatusCode)
                 {

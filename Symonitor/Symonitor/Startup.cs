@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -23,8 +24,7 @@ namespace Symonitor
         {
             services.Configure<UrlAppearanceControllerOptions>(Configuration.GetSection("UrlAppearanceController"));
 
-            services.AddControllersWithViews();         // this enables memory cache
-            // services.AddSingleton<IMemoryCache, MemoryCache>();
+            services.AddControllersWithViews();
             services.AddSingleton<ISearchEngineScraper, GoogleScraper>();
 
             // In production, the React files will be served from this directory
@@ -52,7 +52,7 @@ namespace Symonitor
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = Path.Join(env.ContentRootPath, "ClientApp");
 
                 if (env.IsDevelopment())
                 {

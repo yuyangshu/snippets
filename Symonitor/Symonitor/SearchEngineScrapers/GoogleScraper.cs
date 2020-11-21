@@ -19,7 +19,6 @@ namespace Symonitor.SearchEngineScrapers
 
         public async Task<int> SearchKeywordsAndCountUrlAppearances(string keywords, string urlToCount)
         {
-            // spaces in urls seems to work for google
             var targetUrl = String.Format(UrlPattern, keywords);
 
             using (var result = await _httpClient.GetAsync(targetUrl))
@@ -28,14 +27,13 @@ namespace Symonitor.SearchEngineScrapers
                 {
                     return CountOccurenceOfUrl(await result.Content.ReadAsStringAsync(), urlToCount);
                 }
-            }
 
-            return 0;
+                return 0;
+            }
         }
 
-        int CountOccurenceOfUrl(string htmlContent, string urlToCount)
+        public static int CountOccurenceOfUrl(string htmlContent, string urlToCount)
         {
-            // without a proper (third-party) html parser, have to resort to a hacky solution
             var entryPattern = new Regex(PagePattern);
 
             var count = 0;

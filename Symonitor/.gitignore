@@ -1,8 +1,4 @@
 [Bb]in/
 [Oo]bj/
 
-*.nupkg
-**/packages/*
-!**/packages/build/
-
-/node_modules
+node_modules/

@@ -1,84 +1,62 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
-import { Link } from 'react-router-dom';
+import { UrlAppearanceForm } from './UrlApperanceForm';
 import { ApplicationState } from '../store';
-import * as WeatherForecastsStore from '../store/WeatherForecasts';
+import { UrlAppearanceCount } from '../models/UrlAppearanceCountsModels';
+import { UrlAppearanceCountState } from '../store/UrlAppearanceCountState';
+import * as UrlAppearanceCountActions from '../actions/UrlAppearanceCountActions';
 
 // At runtime, Redux will merge together...
-type WeatherForecastProps =
-  WeatherForecastsStore.WeatherForecastsState // ... state we've requested from the Redux store
-  & typeof WeatherForecastsStore.actionCreators // ... plus action creators we've requested
-  & RouteComponentProps<{ startDateIndex: string }>; // ... plus incoming routing parameters
+type UrlAppearanceCountProps =
+UrlAppearanceCountState // ... state we've requested from the Redux store
+    & typeof UrlAppearanceCountActions.actionCreators // ... plus action creators we've requested
 
 
-class FetchData extends React.PureComponent<WeatherForecastProps> {
-  // This method is called when the component is first added to the document
-  public componentDidMount() {
-    this.ensureDataFetched();
-  }
+class FetchData extends React.PureComponent<UrlAppearanceCountProps> {
+    public render() {
+        return (
+            <React.Fragment>
+                <h1 id="tabelLabel">Symonitor</h1>
+                <br></br>
+                <p> This page displays the number of appearances of a URL in the first 100 results on Google, given a set of keywords. </p>
+                {this.renderUrlAppearanceCountsTable()}
+                <br></br>
+                <UrlAppearanceForm requestUrlAppearanceCounts={this.props.requestUrlAppearanceCounts} />
+            </React.Fragment>
+        );
+    }
 
-  // This method is called when the route parameters change
-  public componentDidUpdate() {
-    this.ensureDataFetched();
-  }
+    private renderUrlAppearanceCountsTable() {
+        if (this.props.isLoading) {
+            return (
+                <span>Loading...</span>
+            );
+        }
 
-  public render() {
-    return (
-      <React.Fragment>
-        <h1 id="tabelLabel">Weather forecast</h1>
-        <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-        {this.renderForecastsTable()}
-        {this.renderPagination()}
-      </React.Fragment>
-    );
-  }
-
-  private ensureDataFetched() {
-    const startDateIndex = parseInt(this.props.match.params.startDateIndex, 10) || 0;
-    this.props.requestWeatherForecasts(startDateIndex);
-  }
-
-  private renderForecastsTable() {
-    return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.forecasts.map((forecast: WeatherForecastsStore.WeatherForecast) =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
-  }
-
-  private renderPagination() {
-    const prevStartDateIndex = (this.props.startDateIndex || 0) - 5;
-    const nextStartDateIndex = (this.props.startDateIndex || 0) + 5;
-
-    return (
-      <div className="d-flex justify-content-between">
-        <Link className='btn btn-outline-secondary btn-sm' to={`/fetch-data/${prevStartDateIndex}`}>Previous</Link>
-        {this.props.isLoading && <span>Loading...</span>}
-        <Link className='btn btn-outline-secondary btn-sm' to={`/fetch-data/${nextStartDateIndex}`}>Next</Link>
-      </div>
-    );
-  }
+        return (
+            <table className='table table-striped' aria-labelledby="tabelLabel">
+                <thead>
+                    <tr>
+                        <th>Keywords</th>
+                        <th>Url</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.props.urlAppearanceCounts.map((count: UrlAppearanceCount) =>
+                        <tr key={count.url}>
+                            <td>{count.keywords}</td>
+                            <td>{count.url}</td>
+                            <td>{count.count}</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        );
+    }
 }
 
 export default connect(
-  (state: ApplicationState) => state.weatherForecasts, // Selects which state properties are merged into the component's props
-  WeatherForecastsStore.actionCreators // Selects which action creators are merged into the component's props
+    (state: ApplicationState) => state.urlAppearanceCounts, // Selects which state properties are merged into the component's props
+    UrlAppearanceCountActions.actionCreators // Selects which action creators are merged into the component's props
 )(FetchData as any);

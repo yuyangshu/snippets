@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aps-crf
+  labels:
+    name: aps-crf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aps-crf
+  template:
+    metadata:
+      labels:
+        app: aps-crf
+    spec:
+      containers:
+      - name: aps-crf
+        image: registry.wtg.ws/aps-crf-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: "64Gi"
+            cpu: "4"
+        env:
+        - name: S3_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: s3-access-key
+              key: S3_ACCESS_KEY_ID
+        - name: S3_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: s3-access-key
+              key: S3_SECRET_ACCESS_KEY
+  progressDeadlineSeconds: 2147483647

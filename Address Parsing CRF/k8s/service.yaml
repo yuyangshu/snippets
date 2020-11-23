@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aps-crf
+  labels:
+    service: aps-crf
+spec:
+  selector:
+    app: aps-crf
+  ports:
+  - port: 57914
+    targetPort: 5000
+    protocol: TCP

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aps-lstm-crf
+  labels:
+    service: aps-lstm-crf
+spec:
+  selector:
+    app: aps-lstm-crf
+  ports:
+  - port: 57915
+    targetPort: 5000
+    protocol: TCP

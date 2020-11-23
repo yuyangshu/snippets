@@ -16,7 +16,8 @@ namespace Symonitor.SearchEngineScrapers
 
         static GoogleScraper()
         {
-            _httpClient = ClientFactory();
+            // TODO wrap HttpClient to test SearchKeywordsAndCountUrlAppearances()
+            _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0");
         }
 
@@ -24,8 +25,6 @@ namespace Symonitor.SearchEngineScrapers
         {
             _logger = logger;
         }
-
-        internal static Func<HttpClient> ClientFactory = () => new HttpClient();
 
         public async Task<int> SearchKeywordsAndCountUrlAppearances(string keywords, string urlToCount, CancellationToken cancellationToken)
         {

@@ -28,7 +28,7 @@ def get_training_data():
     )
     files_to_download = [item["Key"] for item in response['Contents'] if item["Size"] > 0]
 
-    all_tokens, all_tags = [], []
+    all_features, all_tags = [], []
     for filename in files_to_download:
         print("processing " + filename)
 
@@ -54,12 +54,16 @@ def get_training_data():
                             tokens.append(token)
                             tags.append(key)
 
-                all_tokens.append([
-                    token2feature(tokens[i - 1] if i > 0 else None, tokens[i], tokens[i + 1] if i < len(tokens) - 1 else None) for i in range(len(tokens))
+                all_features.append([
+                    feature_from_token(
+                        tokens[i - 1] if i > 0 else None,                   # previous token
+                        tokens[i],                                          # current token
+                        tokens[i + 1] if i < len(tokens) - 1 else None      # next token
+                    ) for i in range(len(tokens))
                 ])
                 all_tags.append(tags)
 
-    return all_tokens, all_tags
+    return all_features, all_tags
 
 
 

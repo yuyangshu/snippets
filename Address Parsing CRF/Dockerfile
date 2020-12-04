@@ -1,6 +1,4 @@
-FROM debian:stretch-slim
-
-RUN apt update && apt install -y python3-dev python3-pip
+FROM python:3.7
 
 WORKDIR /home/aps-crf-service
 COPY . .

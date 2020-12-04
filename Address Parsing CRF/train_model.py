@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     trainer.set_params({
         "c1": 0.1,
-        "c2": 1e-3,
+        "c2": 1e-3,     # coefficients of L1 and L2 regularisation
         "max_iterations": 100,
         "feature.possible_transitions": True
     })

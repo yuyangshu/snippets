@@ -34,14 +34,20 @@ def parse():
     processed_address = remove_control_chars(address)
 
     tokens = [re.sub("[,.]$", '', item) for item in processed_address.split()]
-    features = [token2feature(tokens[i - 1] if i > 0 else None, tokens[i], tokens[i + 1] if i < len(tokens) - 1 else None) for i in range(len(tokens))]
+    features = [
+        feature_from_token(
+            tokens[i - 1] if i > 0 else None,                   # previous token
+            tokens[i],                                          # current token
+            tokens[i + 1] if i < len(tokens) - 1 else None      # next token
+        ) for i in range(len(tokens)
+    )]
 
     tags = tagger.tag(features)
 
     dictionary, previous_tag = OrderedDict(), ""
     for token, tag in zip([item["token.lower()"] for item in features], tags):
         if tag == previous_tag:
-            dictionary[tag] += (' ' if country == "au" else '') + token
+            dictionary[tag] += ('' if country == "jp" else ' ') + token
         else:
             dictionary[tag] = token
             previous_tag = tag

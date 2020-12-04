@@ -20,7 +20,7 @@ def contains_digit(s):
     else:
         return False
 
-def token2feature(prev_token, token, next_token):
+def feature_from_token(prev_token, token, next_token):
     # for now, use features from https://sklearn-crfsuite.readthedocs.io/en/latest/tutorial.html
     features = {
         'bias': 1.0,
